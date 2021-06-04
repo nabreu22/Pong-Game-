@@ -1,7 +1,13 @@
 html, body {
   margin: 0;
   padding: 0;
+  height: 100vh;
+}
+main{
+  display: flex;
+  height: 100%;
 }
 canvas {
   display: block;
+  margin: auto;
 }
