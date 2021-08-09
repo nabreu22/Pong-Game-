@@ -1,4 +1,3 @@
-
 /*__________ball variables______________*/
 
 let xBall = 300;
@@ -7,7 +6,6 @@ let diameter = 13;
 let radius = diameter / 2;
 
 /*_______ball speed_________________*/
-
 
 let ballSpeedX = 6;
 let ballSpeedY = 6;
@@ -19,11 +17,9 @@ let yRacket = 150;
 let widthRacket = 10;
 let heightRacket = 90;
 
-
 /*____________________________________*/
 
-let hit = false
-
+let hit = false;
 
 /*________Game Score___________*/
 
@@ -31,16 +27,15 @@ let myScore = 0;
 let opponentsScore = 0;
 let chanceToMistake = 0;
 
-
 /*________Game Sounds___________*/
 let raquetada;
 let score;
 let soundTrack;
 
 function preload() {
-    soundTrack = loadSound("trilha.mp3");
-    score = loadSound("ponto.mp3");
-    raquetada = loadSound("raquetada.mp3");
+  soundTrack = loadSound("trilha.mp3");
+  score = loadSound("ponto.mp3");
+  raquetada = loadSound("raquetada.mp3");
 }
 
 /*________opponent's racket_______________*/
@@ -62,8 +57,8 @@ function draw() {
   background(0);
   showBall();
   moveBall();
-  checksEdgeCollision(); 
-  
+  checksEdgeCollision();
+
   showRacket(xRacket, yRacket);
   showRacket(xOpponentsRacket, yOpponentsRacket);
   moveRacket();
@@ -76,62 +71,78 @@ function draw() {
   calculatesChanceToMistakes();
 }
 
-function showBall(){
+function showBall() {
   circle(xBall, yBall, diameter);
 }
 
-function moveBall(){
+function moveBall() {
   xBall += ballSpeedX;
   yBall += ballSpeedY;
 }
 
-function checksEdgeCollision(){
-  if(xBall + radius > width || xBall - radius < 0){
-    ballSpeedX *= -1
+function checksEdgeCollision() {
+  if (xBall + radius > width || xBall - radius < 0) {
+    ballSpeedX *= -1;
   }
-  if(yBall + radius > height || yBall - radius < 0){
-    ballSpeedY *= -1
+  if (yBall + radius > height || yBall - radius < 0) {
+    ballSpeedY *= -1;
   }
 }
 
-
-function showRacket(x, y){
+function showRacket(x, y) {
   rect(x, y, widthRacket, heightRacket);
 }
 
 function moveRacket() {
-    if (keyIsDown(UP_ARROW)) {
-        yRacket -= 10;
-    }
-    if (keyIsDown(DOWN_ARROW)) {
-        yRacket += 10;
-    }
+  if (keyIsDown(UP_ARROW)) {
+    if (yRacket < 20) return;
+    else yRacket -= 10;
+  }
+  if (keyIsDown(DOWN_ARROW)) {
+    if (yRacket > 290) return;
+    else yRacket += 10;
+  }
 }
 
-function moveOpponentsRacket(){
-   opponentsSpeedY = yBall - yOpponentsRacket - heightOpponentsRacket / 2 - 40;
-  yOpponentsRacket += opponentsSpeedY + chanceToMistake;
+function moveOpponentsRacket() {
+  opponentsSpeedY = yBall - yOpponentsRacket - heightOpponentsRacket / 2 - 40;
+  const newPosY = yOpponentsRacket + opponentsSpeedY + chanceToMistake;
+
+  if (newPosY < 20) return;
+  else if (newPosY > 290) return;
+  else yOpponentsRacket = newPosY;
+
   calculatesChanceToMistakes();
-  
 }
-
 
 function checksRacketCollision() {
-    if (xBall - radius < xRacket + widthRacket && yBall - radius < yRacket + heightRacket && yBall + radius > yRacket) {
-      ballSpeedX *= -1;
-      raquetada.play();
-    }
-}
-
-function checksRacketCollision(x,y){
-   hit = collideRectCircle(x, y, widthRacket, heightRacket, xBall, yBall, radius);
-  if(hit){
+  if (
+    xBall - radius < xRacket + widthRacket &&
+    yBall - radius < yRacket + heightRacket &&
+    yBall + radius > yRacket
+  ) {
     ballSpeedX *= -1;
     raquetada.play();
   }
 }
 
-function includesScore(){
+function checksRacketCollision(x, y) {
+  hit = collideRectCircle(
+    x,
+    y,
+    widthRacket,
+    heightRacket,
+    xBall,
+    yBall,
+    radius
+  );
+  if (hit) {
+    ballSpeedX *= -1;
+    raquetada.play();
+  }
+}
+
+function includesScore() {
   stroke(255);
   textAlign(CENTER);
   textSize(16);
@@ -145,33 +156,27 @@ function includesScore(){
   text(opponentsScore, 470, 26);
 }
 
-function makeScore(){
-  if(xBall > 590){
+function makeScore() {
+  if (xBall > 590) {
     myScore += 1;
     score.play();
   }
-  if(xBall < 10){
+  if (xBall < 10) {
     opponentsScore += 1;
     score.play();
   }
 }
-  
-  
+
 function calculatesChanceToMistakes() {
   if (opponentsScore >= myScore) {
-    chanceToMistake += 1
-    if (chanceToMistake >= 39){
-    chanceToMistake = 40
+    chanceToMistake += 1;
+    if (chanceToMistake >= 39) {
+      chanceToMistake = 40;
     }
   } else {
-    chanceToMistake -= 1
-    if (chanceToMistake <= 35){
-    chanceToMistake = 35
+    chanceToMistake -= 1;
+    if (chanceToMistake <= 35) {
+      chanceToMistake = 35;
     }
   }
 }
-  
-  
-  
-  
-
